@@ -1,0 +1,31 @@
+{
+    "DEBUG": "not true",
+    "configurations": [
+        {
+            "name": "EXAMPLE",
+            "port_device_prefix": "result from # udevadm info -q path -n /dev/ttyUSB7 # command until #ttyUSB# substring",
+            "port_speed": "4800 is good guess for most devices. 34800 is sometimes referred as AIS speed",
+            "accept_messages": ["optional", "an array", "of three letter nmea0183 message type identificators"],
+            "deny_messages": ["optional",
+                "when accept_messages is present, then only those nmea0183 message types will forwarded to that port",
+                "when accept_messages is present but empty, then no messages are forwarded to that port",
+                "when deny_messages is present, then listed message types will not be forwarded to that port",
+                "when both accept_messages and deny_messages are present then both are considered. first accept and then deny.",
+                "dont use both, i think..",
+                "when neither are present, all received messages are forwarded to that port, except those received from same port"
+            ]
+        },
+        {
+            "name": "gate",
+            "port_device_prefix": "/devices/pci0000:00/0000:00:14.0/usb3/3-3/3-3.4/3-3.4.3/3-3.4.3.2/3-3.4.3.2:1.0/",
+            "port_speed": "115200",
+            "deny_messages": []
+        },
+        {
+            "name": "wind",
+            "port_device_prefix": "/devices/pci0000:00/0000:00:14.0/usb3/3-3/3-3.4/3-3.4.3/3-3.4.3.1/3-3.4.3.1:1.0/",            
+            "port_speed": "4800",
+            "accept_messages": ["ZDA"]
+        }
+    ]
+}
