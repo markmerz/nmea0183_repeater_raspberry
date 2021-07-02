@@ -16,6 +16,13 @@
             ]
         },
         {
+            "name": "EXAMPLE TCP server",
+            "_network_type": "tcp_server is supported for now. Remove _ from key to activate.",
+            "network_port": "10110 seems to be most popular",
+            "accept_messages": ["as in previous example"],
+            "deny_messages": ["as in previoas example"]
+        },
+        {
             "name": "gate",
             "port_device_prefix": "/devices/pci0000:00/0000:00:14.0/usb3/3-3/3-3.4/3-3.4.3/3-3.4.3.2/3-3.4.3.2:1.0/",
             "port_speed": "115200",
@@ -26,6 +33,12 @@
             "port_device_prefix": "/devices/pci0000:00/0000:00:14.0/usb3/3-3/3-3.4/3-3.4.3/3-3.4.3.1/3-3.4.3.1:1.0/",            
             "port_speed": "4800",
             "accept_messages": ["ZDA"]
+        },
+        {
+            "name": "navionics tablet",
+            "network_type": "tcp_server",
+            "network_port": "10110",
+            "deny_messages": []
         }
     ]
 }
