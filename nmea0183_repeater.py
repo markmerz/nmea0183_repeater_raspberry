@@ -184,6 +184,7 @@ class nmea0183_tcp_server(threading.Thread):
         self.inputs = [self.server]
         self.outputs = []
         self.message_queues = {}
+        self.message_queues_lock = threading.Lock()
         self.line_buffers = {}
 
         if "accept_messages" in config:
@@ -204,7 +205,9 @@ class nmea0183_tcp_server(threading.Thread):
                     connection, client_address = s.accept()
                     connection.setblocking(0)
                     self.inputs.append(connection)
+                    self.message_queues_lock.acquire()
                     self.message_queues[connection] = queue.Queue()
+                    self.message_queues_lock.release()
                 else:                    
                     data = s.recv(1024)
                     if data:
@@ -244,7 +247,9 @@ class nmea0183_tcp_server(threading.Thread):
                         if s in self.line_buffers:
                             del self.line_buffers[s]
                         s.close()
-                        del self.message_queues[s]                                                
+                        self.message_queues_lock.acquire()
+                        del self.message_queues[s]
+                        self.message_queues_lock.release()                                                
 
             for s in writable:
                 try:
@@ -261,7 +266,9 @@ class nmea0183_tcp_server(threading.Thread):
                 if s in self.line_buffers:
                     del self.line_buffers[s]
                 s.close()
+                self.message_queues_lock.acquire()
                 del self.message_queues[s]
+                self.message_queues_lock.release()
 
     def send(self, message):
         message_type = message[3:6]
@@ -271,10 +278,12 @@ class nmea0183_tcp_server(threading.Thread):
         if self.deny_messages is not None:
             if message_type in self.deny_messages:
                 return
+        self.message_queues_lock.acquire()
         for mq_key in self.message_queues:                
             self.message_queues[mq_key].put(bytes(message, "iso-8859-1"))
             if mq_key not in self.outputs:
                 self.outputs.append(mq_key)
+        self.message_queues_lock.release()
             
 if __name__ == "__main__":
     main()
