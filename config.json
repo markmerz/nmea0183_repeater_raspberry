@@ -16,7 +16,7 @@
             ]
         },
         {
-            "name": "EXAMPLE TCP server",
+            "name": "EXAMPLE TCP server. can have many instances in different ports but i don't see a usecase for that, as one server can serve multiple clients",
             "_network_type": "tcp_server is supported for now. Remove _ from key to activate.",
             "network_port": "10110 seems to be most popular",
             "accept_messages": ["as in previous example"],

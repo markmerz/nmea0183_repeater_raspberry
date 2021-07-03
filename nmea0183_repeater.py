@@ -198,7 +198,7 @@ class nmea0183_tcp_server(threading.Thread):
 
     def run(self):
         while self.inputs and continue_work:
-            readable, writable, exceptional = select.select(self.inputs, self.outputs, self.inputs, 1)
+            readable, writable, exceptional = select.select(self.inputs, self.outputs, self.inputs, 0.3)
             for s in readable:
                 if s is self.server:
                     connection, client_address = s.accept()
@@ -263,19 +263,18 @@ class nmea0183_tcp_server(threading.Thread):
                 s.close()
                 del self.message_queues[s]
 
-        def send(self, message):
-            message_type = message[3:6]
-            if self.accept_messages is not None:
-                if message_type not in self.accept_messages:
-                    return
-            if self.deny_messages is not None:
-                if message_type in self.deny_messages:
-                    return
-
-            for mq_key in self.message_queues:                
-                self.message_queues[mq_key].put(message)
-                if mq_key not in self.outputs:
-                    self.outputs.append(mq_key)
+    def send(self, message):
+        message_type = message[3:6]
+        if self.accept_messages is not None:
+            if message_type not in self.accept_messages:
+                return
+        if self.deny_messages is not None:
+            if message_type in self.deny_messages:
+                return
+        for mq_key in self.message_queues:                
+            self.message_queues[mq_key].put(bytes(message, "iso-8859-1"))
+            if mq_key not in self.outputs:
+                self.outputs.append(mq_key)
             
 if __name__ == "__main__":
     main()
