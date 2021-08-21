@@ -23,7 +23,7 @@ in dongles are another way around. Just beware. The dongles are the ones with
 transparent blue cover.
 
 UPDATE 21.08.2021: turns out that 120 ohms is perfectly valid value for line
-terminating resistor but Nasa Clipper series instruments expect much higer
+terminating resistor but Nasa Clipper series instruments expect much higher
 values. Series resistor helps in some cases but take look at my 
 nmea0183-5V-buffer-board project for a much more reliable solution.
 
