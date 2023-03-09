@@ -114,13 +114,14 @@ class nmea0183_reader(threading.Thread):
     def run(self):        
         charbuf = bytearray()
         while continue_work:
-            char = self.ser.read(size=1) # blocks until timeout is reached. Timeout is defined when creating serial.Serial object.
-            if len(char) > 0:
-                charbuf.extend(char)
-                if char == b'\n':
-                    line = charbuf.decode("iso-8859-1")
-                    self.callback(self.config["name"], line)
-                    charbuf.clear()
+            chars = self.ser.read(size=1024) # blocks until timeout is reached. Timeout is defined when creating serial.Serial object.
+            if len(chars) > 0:
+                for char in chars:
+                    charbuf.extend(char)
+                    if char == b'\n':
+                        line = charbuf.decode("iso-8859-1")
+                        self.callback(self.config["name"], line)
+                        charbuf.clear()
 
 class nmea0183_writer(threading.Thread):
     def __init__(self, ser, config):
